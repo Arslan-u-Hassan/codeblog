@@ -1,0 +1,174 @@
+<!Doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>form</title>
+        <style>
+            #h01 {
+              text-align: center;
+            }
+            #l01 {
+              text-align: right;
+            }
+            .one {
+                width: 174px ;
+                height: 20px ;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Mailing information</h1>
+        <form>
+            <table width="40%">
+                <tr>
+                    <td>First Name</td>
+                    <td><input type="text" size="50" value="Thomas" /></td>
+                </tr>
+                <tr>
+                    <td>Last Name</td>
+                    <td><input type="text" size="50"  value="jefferson" /></td>
+                </tr>
+                <tr>
+                    <td>Address</td>
+                    <td><input type="text" size="50" value="520 3rd st" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="text"  size="50" value="suite 305" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Example: Apartment#5</td>
+                </tr>
+                <tr>
+                    <td>City</td>
+                    <td><input type="text" size="50" value="SAN FRANCISCO" /></td>
+                </tr>
+                <tr>
+                    <td>state</td>
+                    <td>           
+                        <select  class="one">
+                            <option value="california" selected>california</option>
+                            <option value="farance">farance</option>
+                        <option value="itally">itallly</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Zip Code</td>
+                    <td><input type="number" size="30" value="94107" /></td>
+                </tr>
+                <tr>
+                    <td>Email Address</td>
+                    <td><input type="email" size="50"  value="monticello@wired.com" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Your Email address is used to send an order confirmation<br>
+                        and communicate about your subscription.</td>
+                </tr>
+            </table>    
+        </form>
+        <p><i>Please, fill the form, required fislde marked<strong style="color: red">*</strong></i></p>
+        <form>
+            <fieldset style="width: 25%">
+               <legend>Contact Information</legend>
+                <table style="width: 45%;">
+                    <tr>
+                        <td style="text-align: left;">Name<strong style="color: red">*</strong></td>
+                        <td style="text-align:right"><input type="text" size="35" /></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left">Telephone<strong style="color: red">*</strong></td>
+                        <td style="text-align: right"><input type="tel" size="35" ></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left">Email<strong style="color: red">*</strong></td>
+                        <td style="text-align: right"><input type="email"  size="35" ></td>
+                    </tr>
+                </table> 
+            </fieldset>
+            <fieldset style="width: 25%">
+                <legend>Personal information</legend>
+                <table>
+                    <tr>
+                        <td>Age<strong style="color: red">*</strong></td>
+                        <td><input type="number" size="35" /></td>
+                    </tr>
+                    <tr>
+                        <td>Gender</td>
+                        <td><select class="one">
+                            <option value="Female">Female</option>
+                            <option value="Male">Male</option>
+                            </select></td>
+                    </tr>
+                    <tr>
+                        <td>List personal qualities</td>
+                        <td><textarea cols="22" rows="3"></textarea></td>
+                    </tr>
+                </table>
+            </fieldset>
+            <fieldset style="width: 25%">
+                <legend>Choose from the list</legend>
+                <table>
+                    <tr>
+                        <td><input type="checkbox" name="choose" />CSS</td>
+                        <td><input type="checkbox" name="choose" />HTML</td>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="choose" />JavaScript</td>
+                        <td><input type="checkbox" name="choose" />PHP</td>
+                    </tr>
+                </table>
+            </fieldset><br>
+            <input type="submit"  style="width: 300px; height: 20px" value="Submit informatiom" />
+        </form>
+        <h1 id="h01">Enter Contact Information</h1>
+        <form>
+            <div id="l01"><label>Search:</label><input type="search" size="35" /></div>
+            <table>
+                <tr>
+                    <td>Name:</td>
+                    <td><input type="text" placeholder="Enter your name" required  size="35"></td>
+                </tr>
+                <tr>
+                    <td>E-Mail:</td>
+                    <td><input type="email" size="35" /></td>
+                </tr>
+                <tr>
+                    <td>Phone:</td>
+                    <td><input type="tel" size="35" /></td>
+                </tr>
+                <tr>
+                    <td>Website:</td>
+                    <td><input type="url"  size="35" /></td>
+                </tr>
+                <tr>
+                    <td>Birthday:</td>
+                    <td><input type="date" size="35" /></td>
+                </tr>
+                <tr>
+                    <td>Quantity Attending:</td>
+                    <td><input type="number" size="35" /></td>
+                </tr>
+                <tr>
+                    <td>Pattern:</td>
+                    <td><input type="number" size="35" /></td>
+                </tr>
+                <tr>
+                    <td>Range:</td>
+                    <td><input type="range" style="width: 300px; height: 20px" size="35" /></td>
+                </tr>
+                <tr>
+                    <td>Hair colr:</td>
+                    <td><input type="color" style="width: 300px; height: 20px" value="#b8860b" /></td>
+                </tr>
+                <tr>
+                    <td>Select phone image:</td>
+                    <td><input type="text" size="20" /> <input type="file" value="Add files" multiple></td>
+                </tr>
+            </table>
+            <input type="submit" value="submit" />
+        </form>
+    </body>
+</html>
