@@ -1,6 +1,6 @@
 from flask import Flask, render_template , request , session ,redirect
 from flask_sqlalchemy import SQLAlchemy
-#from flask_mail import Mail
+from flask_mail import Mail
 from datetime import datetime
 #from werkzeug import secure_filename
 import json
@@ -17,6 +17,16 @@ app.config['SQLALCHEMY_DATABASE_URI'] =db_uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 db=SQLAlchemy(app)
 app.secret_key = 'super-secret-key'
+
+''' yeh mail send krny wala content hain '''
+app.config.update(
+    MAIL_SERVER='smtp.gmail.com',
+    MAIL_PORT='465',
+    MAIL_USE_SSL=True,
+    MAIL_USERNAME=params['username'],
+    MAIL_PASSWORD=params['mailpass']
+)
+mail=Mail(app)
 class Contacts(db.Model):
     '''sno, name,email, phone_num, msg,date '''
     sno = db.Column(db.Integer, primary_key=True)
@@ -143,11 +153,12 @@ def contact():
         db.session.add(entry)
         db.session.commit()
         ''' this content comment  yeh mail send krny wala '''
-        ''' mail.send_message('New massage from ' + name ,
-                          sender=email,
+        mail.send_message('New massage from ' + name ,
+                          sender=params['username'],
+                          #recipients=[email, params['username']],
                           recipients=[params['username']],
-                          body=massage+ "\n"+ phone
-                          )'''
+                          body=massage+ "\n"+ phone +"\n"+ email
+                          )
 
     return render_template("contact.html",params=params)
 
