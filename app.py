@@ -1,7 +1,11 @@
-from flask import Flask, render_template , request , session ,redirect
+from flask import Flask, render_template, request, session, redirect, flash, url_for
 from flask_sqlalchemy import SQLAlchemy
-from flask_mail import Mail
+from flask_mail import Mail , Message
 from datetime import datetime
+from random import randrange
+from itsdangerous import URLSafeTimedSerializer, SignatureExpired
+import werkzeug
+import sqlite3
 #from werkzeug import secure_filename
 import json
 import math
@@ -18,15 +22,18 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 db=SQLAlchemy(app)
 app.secret_key = 'super-secret-key'
 
+
 ''' yeh mail send krny wala content hain '''
 app.config.update(
     MAIL_SERVER='smtp.gmail.com',
     MAIL_PORT='465',
     MAIL_USE_SSL=True,
+    MAIL_USE_TLS=False,
     MAIL_USERNAME=params['username'],
     MAIL_PASSWORD=params['mailpass']
 )
 mail=Mail(app)
+s = URLSafeTimedSerializer('Thisisasecret!')
 class Contacts(db.Model):
     '''sno, name,email, phone_num, msg,date '''
     sno = db.Column(db.Integer, primary_key=True)
@@ -44,7 +51,15 @@ class Posts(db.Model):
     content  = db.Column(db.String(255),  nullable=False)
     img_file = db.Column(db.String(255), nullable=True)
     date = db.Column(db.String(12),   nullable=True )
-
+class Signup(db.Model):
+    '''sno, name,email, username, password, repeat-password'''
+    sno = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255),  nullable=False)
+    email = db.Column(db.String(255),  nullable=False)
+    username = db.Column(db.String(255),  nullable=False)
+    password = db.Column(db.String(255),  nullable=False)
+    repeat_password = db.Column(db.String(12),   nullable=True )
+    code = db.Column(db.Integer,   nullable=True )
 db.create_all()
 
 @app.route('/')
@@ -73,23 +88,22 @@ def about():
 
 @app.route('/dashboard' , methods=["GET", "POST"])
 def dashboard():
-    if 'user' in session and session['user'] == params['admin_user']:
+    if 'adm' in session and session['adm'] == params['admin_user']:
         posts=Posts.query.all()
         return render_template("dashboard.html", params=params, posts=posts)
     if(request.method=='POST'):
         username=request.form.get('username')
         password = request.form.get('password')
         if(username== params['admin_user'] and password==params['admin_password']):
-            session['user']=username
+            session['adm']=username
             posts = Posts.query.all()
             return render_template("dashboard.html", params=params, posts=posts)
 
-    return render_template("login.html", params=params)
-
+    return render_template("adminlogin.html", params=params)
 
 @app.route("/edit/<string:sno>", methods = ['GET', 'POST'])
 def edit(sno):
-    if ('user' in session and session['user'] == params['admin_user']):
+    if ('adm' in session and session['adm'] == params['admin_user']):
         if request.method == 'POST':
             box_title = request.form.get('title')
             tline = request.form.get('tagline')
@@ -117,7 +131,7 @@ def edit(sno):
 
 @app.route('/delete/<string:sno>', methods=["GET", "POST"])
 def delete(sno):
-    if 'user' in session and session['user'] == params['admin_user']:
+    if 'adm' in session and session['adm'] == params['admin_user']:
         post=Posts.query.filter_by(sno=sno).first()
         db.session.delete(post)
         db.session.commit()
@@ -125,12 +139,12 @@ def delete(sno):
 
 @app.route('/logout')
 def logout():
-    session.pop('user')
+    session.pop('adm')
     return redirect("/dashboard")
 
 @app.route('/uploader' , methods=[ "GET", "POST"])
 def uploader():
-    if 'user' in session and session['user'] == params['admin_user']:
+    if 'adm' in session and session['adm'] == params['admin_user']:
         if request.method=="POST":
             f=request.files['file1']
         #    f.save(os.path.join(app.config['UPLOAD_FOLDER'] , secure_filename(f.filename)))
@@ -154,13 +168,112 @@ def contact():
         db.session.commit()
         ''' this content comment  yeh mail send krny wala '''
         mail.send_message('New massage from ' + name ,
-                          sender=params['username'],
+                          sender=email,
                           #recipients=[email, params['username']],
                           recipients=[params['username']],
                           body=massage+ "\n"+ phone +"\n"+ email
                           )
 
     return render_template("contact.html",params=params)
+
+@app.route('/signup' , methods=["GET","POST"])
+def signup():
+    if(request.method=='POST'):
+        num=''
+        fname=request.form.get('name')
+        email=request.form.get('email')
+        uname = request.form.get('username')
+        password=request.form.get('pass')
+        rpassword=request.form.get('repeat-pass')
+        if(password==rpassword):
+            mass="Click The Below Link For login and Activate Your Account "
+            #mas=randrange(65656, 78678, 6)
+            #num=str(mas)
+            token = s.dumps(email, salt='email-confirm')
+            link = url_for('confirm_email', token=num, _external=True)
+            ''' this content comment  yeh mail send krny wala '''
+
+            mail.send_message('New massage from ' + fname,
+                              sender=params['username'],
+                              recipients=[email],
+                              body= mass + "\n" + link
+                              )
+            flash("Plz check your Email Activition code send osn your mail id ")
+            entry = Signup(name=fname, email=email, username=uname, password=password, repeat_password=rpassword, code=token)
+            db.session.add(entry)
+            db.session.commit()
+        else:
+           flash("Passwords are not same!")
+    return render_template("signup.html", params=params)
+
+@app.route('/confirm_email/<string:token>')
+def Verify(token):
+    try:
+        email = s.loads(token, salt='email-confirm', max_age=36000000000)
+    except SignatureExpired:
+        return '<h1>The token is expired!</h1>'
+    return '<h1>The token works!</h1>'
+
+@app.route('/login' , methods=["GET","POST"])
+def login():
+    buname = 0
+    bemail = 0
+    bpass = 0
+    if request.method=="POST":
+        name = request.form.get('name')
+        pas = request.form.get('pass')
+        signup = Signup.query.filter_by(password=pas).all()
+        for s in signup:
+            if (name == s.username):
+                buname = 1
+            if (name == s.email):
+                bemail = 1
+            if (pas == s.password):
+                bpass = 1
+                snum=s.sno
+        if bpass == 1:
+           if (buname == 1 or bemail == 1):
+               session['loginuser']=snum
+               #sn=session['loginuser']
+               flash("Successfully Login!")
+               return render_template("login.html", params=params,  snum=snum)
+        else:
+            flash("Your Username/Email or Password Incorrect!")
+            return render_template("login.html", params=params)
+    else:
+        return render_template("login.html", params=params)
+
+@app.route('/userdashboard' , methods=["GET","POST"])
+def userdashboard():
+    if ('loginuser' in session):
+        snum=session['loginuser']
+        if (request.method == 'POST'):
+            fname = request.form.get('name')
+            email = request.form.get('email')
+            uname = request.form.get('username')
+            cpassword = request.form.get('cpass')
+            password = request.form.get('pass')
+            rpassword = request.form.get('repeat-pass')
+            signup= Signup.query.filter_by(sno=snum).first()
+            if(cpassword==signup.password):
+                signup.name=fname
+                signup.email=email
+                signup.username = uname
+                signup.password=password
+                signup.repeat_password=rpassword
+                db.session.commit()
+                return redirect('/userdashboard')
+            else:
+                return "Old Password is Incorrect!"
+        else:
+            signup = Signup.query.filter_by(sno=snum).first()
+            return render_template('userdashboard.html', params=params, signup=signup, sn=snum)
+    return login()
+
+@app.route('/userlogout')
+def userlogout():
+    session.pop('loginuser')
+    return login()
 
 if __name__=="__main__":
  app.run(debug=True)

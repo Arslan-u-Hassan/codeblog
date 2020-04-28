@@ -1,8 +1,8 @@
 {
   "params": {
-    "fb_uri": "https://facebook.com/codingthunder",
-    "tw_uri": "https://twitter.com/codingthunder\"",
-    "gh_uri": "https://github.com/codingthunder\"",
+    "fb_uri": "https://facebook.com/arslan",
+    "tw_uri": "https://twitter.com/arslan\"",
+    "gh_uri": "https://github.com/arslan\"",
     "main_tag": "Code Blog",
     "username": "mirzag1007@gmail.com",
     "mailpass": "f65hg70a72",
@@ -11,6 +11,7 @@
     "login_image":"login.svg",
     "admin_user":"arslan",
     "admin_password": "arslan123",
-    "upload_location": "D:\\Work\\PYTHON\\Python Programe\\Flask Programe\\FirstFlask"
+    "upload_location": "D:\\Work\\PYTHON\\Python Programe\\Flask Programe\\FirstFlask",
+    "numb": "1"
   }
 }

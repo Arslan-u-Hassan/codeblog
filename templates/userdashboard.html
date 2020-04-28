@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+  {% block body %}
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="w-100" style="background-image: url('static/img/me.jpg'); width: 100%">
+				<div class=" wrap-login100 w-75 p-l-50 p-r-50 p-t-72 p-b-50 container m-t-50 " style="background-color: #b3ffff">
+					<form class="login100-form validate-form"  action="/userdashboard" method="post">
+						<span class="login100-form-title p-b-59 text-center">
+							User Profile
+						</span>
+						<div class="wrap-input100 validate-input w-25" data-validate="Name is required">
+							<span class="label-input100">Full Name</span>
+							<input class="input100" type="text" name="name" placeholder="Name..." value="{{signup.name}}">
+							<span class="focus-input100"></span>
+						</div>
+
+						<div class="wrap-input100 validate-input w-25 m-l-25" data-validate = "Valid email is required: ex@abc.xyz">
+							<span class="label-input100">Email</span>
+							<input class="input100" type="text" name="email" placeholder="Email addess..." value="{{signup.email}}">
+							<span class="focus-input100"></span>
+						</div>
+
+						<div class="wrap-input100 validate-input w-25" data-validate="Username is required">
+							<span class="label-input100">Username</span>
+							<input class="input100" type="text" name="username" placeholder="Username..." value="{{signup.username}}">
+							<span class="focus-input100"></span>
+						</div>
+
+						<div class="wrap-input100 validate-input w-25" data-validate = "Password is required">
+							<span class="label-input100">Current Password</span>
+							<input class="input100" type="text" name="cpass" placeholder="*************">
+							<span class="focus-input100"></span>
+						</div>
+
+						<div class="wrap-input100 validate-input w-25 m-l-90" data-validate = "Repeat Password is required">
+							<span class="label-input100">New Password</span>
+							<input class="input100" type="text" name="pass" placeholder="*************">
+							<span class="focus-input100"></span>
+						</div>
+
+						<div class="wrap-input100 validate-input w-25 m-l-70" data-validate = "Repeat Password is required">
+							<span class="label-input100">Repeat Password</span>
+							<input class="input100" type="text" name="repeat-pass" placeholder="*************">
+							<span class="focus-input100"></span>
+						</div>
+						<hr>
+						<div>
+							<div class="wrap-login100-form-btn">
+								<button class="btn btn-primary float-left " type="submit">
+									Update
+								</button>
+							</div>
+						</div>
+						<div>
+							<div class="wrap-login100-form-btn">
+								<a class="btn btn-primary float-left"  href="/userlogout">
+									Logout
+								</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+ {% endblock %}

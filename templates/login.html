@@ -1,41 +1,71 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../../../favicon.ico">
-    <title>Admin Panel</title>
+{% extends "layout.html" %}
+  {% block body %}
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="login100-more" style="background-image: url('static/img/me.jpg'); width: 100%">
+				<div style=" width: 350px; margin-left: 600px;margin-top: 60px">
+					{% with messages = get_flashed_messages() %}
+	  					{% if messages %}
+    						{% for message in messages %}
+	      					  	<div class="alert alert-primary alert-dismissible fade show" role="alert">
+                					<span>{{ message }}</span>
+                					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                						<span aria-hidden="true">&times;</span>
+                					</button>
+								  </div>
+							{% endfor %}
+	  					{% endif %}
+					{% endwith %}
+				</div>
+			    <div class="wrap-login100 p-l-50 p-r-50 p-t-72 p-b-50 " style="background-color: #b3ffff; margin: auto ; margin-top: 50px;margin-down: 50px"  >
+				    <form class="login100-form validate-form"  action="/login" method="post">
+					    <span class="login100-form-title p-b-59">
+						    Log In
+					    </span>
+					    <div class="wrap-input100 validate-input" data-validate="Name is required">
+						    <span class="label-input100">Email/Username</span>
+						    <input class="input100" type="text" name="name" placeholder="Email/Username" >
+						    <span class="focus-input100"></span>
+					    </div>
 
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+			    		<div class="wrap-input100 validate-input" data-validate = "Password is required">
+						    <span class="label-input100">Password</span>
+						    <input class="input100" type="text" name="pass" placeholder="*************">
+						    <span class="focus-input100"></span>
+					    </div>
 
-    <!-- Custom styles for this template -->
-    <link href="signin.css" rel="stylesheet">
-  </head>
-
-  <body class="text-center">
-
- <link href="{{url_for('static', filename='css/signin.css')}}" rel="stylesheet">
-
-    <form class="form-signin" action="/dashboard" method="post">
-      {% set fname = 'img/'+  params['login_image']  %}
-      <img class="mb-4" src="{{url_for('static', filename=fname)}}" alt="" width="72" height="72">
-      <h1 class="h3 mb-3 font-weight-normal">Admin Login</h1>
-      <label for="uname" class="sr-only">User Name</label>
-      <input type="text" id="uname" class="form-control" name="username" placeholder="User Name" required autofocus>
-      <label for="Pass" class="sr-only">Password</label>
-      <input type="password" id="Pass" class="form-control" name="password" placeholder="Password" required>
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me"> Remember me
-        </label>
-      </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-      <p class="mt-5 mb-3 text-muted">© {{params['main_tag'] }} 2017-2018</p>
-    </form>
-
-
- </body>
-</html>
+    					<div class="flex-m w-full p-b-33">
+						    <div class="contact100-form-checkbox">
+    							<input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
+    							<label class="label-checkbox100" for="ckb1">
+    								<span class="txt1">
+    									I agree to the
+    									<a href="#" class="txt2 hov1">
+	    									Terms of User
+		    							</a>
+			    					</span>
+				    			</label>
+					    	</div>
+					    </div>
+					    <div>
+			    			<div class="wrap-login100-form-btn">
+								<div class="login100-form-bgbtn"></div>
+								<button class="btn btn-primary float-left" type="submit">
+										Log In
+								</button>
+							</div>
+					    </div>
+						<div>
+			    			<div class="wrap-login100-form-btn">
+								<a class="btn btn-primary float-left" href="/userdashboard">
+									Profile
+									<i class="fa fa-long-arrow-right m-l-5"></i>
+								</a>
+							</div>
+					    </div>
+                    </form>
+			    </div>
+            </div>
+		</div>
+	</div>
+ {% endblock %}
